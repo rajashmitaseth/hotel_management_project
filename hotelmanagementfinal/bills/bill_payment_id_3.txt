@@ -1,0 +1,32 @@
+
+SYLAS HOTEL
+Adress
+Contact No.: +911234567890
+E-mail: contact.sylashotel@gmail.com
+----------------------------------------
+RECEIPT
+Thu 12/14/23 03:06:18
+PaymnetID: 3
+ReservationID: 3
+----------------------------------------
+Qty   Item                    Price (Rs.)
+1   Free Wifi                       0
+5   Complimentary Breakfast         0
+5   Stand-Conn-Single-Jacuzzi-3 22750
+5   Master-Suite-King-Balcony-1 46150
+5   Apartment-Suite-King-Pool-2 87100
+1   Lunch (Veg, Serves 1)         500
+4   Lunch (Non-Veg, Serves 1)    2400
+4   Dinner (Veg, Serves 1)       2000
+7   Dinner (Non-Veg, Serves 1)   4200
+8   Packaged Water (1L)           160
+8   Packaged Water (1L)           160
+5   Cold Drinks (1L)              250
+----------------------------------------
+Total:                            165670
+Mode of Payment:             Credit Card
+----------------------------------------
+Thank you for choosing us.
+Comfort with a touch of luxury.
+ 
+

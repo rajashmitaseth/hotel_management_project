@@ -1,0 +1,31 @@
+
+SYLAS HOTEL
+Adress
+Contact No.: +911234567890
+E-mail: contact.sylashotel@gmail.com
+----------------------------------------
+RECEIPT
+Thu 12/14/23 03:02:34
+PaymnetID: 1
+ReservationID: 1
+----------------------------------------
+Qty   Item                    Price (Rs.)
+1   Free Wifi                       0
+2   Complimentary Breakfast         0
+2   Deluxe-Double-Terrace-1      9880
+2   Lunch (Non-Veg, Serves 1)    1200
+2   Dinner (Non-Veg, Serves 1)   1200
+4   Tea                            24
+3   Coffee                         21
+6   Snacks                        420
+2   Parking                        40
+2   Gym                           200
+1   Laundry                       200
+----------------------------------------
+Total:                             13185
+Mode of Payment:              Debit Card
+----------------------------------------
+Thank you for choosing us.
+Comfort with a touch of luxury.
+ 
+
