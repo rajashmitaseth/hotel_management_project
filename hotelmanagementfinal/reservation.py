@@ -1,0 +1,192 @@
+import tkinter as tk
+from tkinter import ttk
+from datetime import datetime, date
+import tkcalendar
+from models.reservationsmodel import Reservation
+from models.reservations_roomsmodel import Reservation_Room
+import controllers.reservationcontroller as reservationcontroller
+import controllers.reservation_roomcontroller as reservation_roomcontroller
+import pytz
+from room import Room_Tab
+global blue, creme, orange, adorage
+orange = '#070721'
+creme = '#EFC88B'
+blue = '#CF5C36'
+adorage = 'Adorage'
+class Reservation_Tab(tk.Frame):
+    def __init__(self, notebook):
+        super().__init__()
+        global checkin_date, checkout_date, reservations_table, people, number_of_rooms, reservations_input_frame, reservations_search_entry, current_people, current_rooms, reservationsrooms_table, choose_rooms, reservations_rooms_table, min_checkout_date
+        self.master = notebook
+        self.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17), weight = 1, uniform = 'a')
+        self.columnconfigure((0,1,2), weight = 1, uniform = 'a')
+        reservations_input_frame = tk.Frame(self, background = orange)
+        reservations_input_frame.grid(row = 0, rowspan = 18, column = 0, sticky = 'nsew')
+        reservations_input_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight = 1, uniform = 'a')
+        reservations_input_frame.columnconfigure((0,1,2), weight = 1, uniform = 'a')
+        tk.Label(reservations_input_frame, background = orange, font = (adorage, 14), fg = creme, text = "Check-In Date:").grid(row = 2, column = 0, sticky = 'e')
+        min_checkout_date = tk.StringVar()
+        checkin_date = tkcalendar.DateEntry(reservations_input_frame, selectmode = 'day', background = creme, foreground = orange, font = (adorage, 12), mindate =date.today(), textvariable = min_checkout_date)
+        checkin_date.grid(row = 2, column = 1, columnspan = 2, sticky = 'nsew', padx = 10, pady = 5, ipadx = 10)
+        tk.Label(reservations_input_frame, background = orange, font = (adorage, 14), fg = creme, text = "Check-Out Date:").grid(row = 3, column = 0, sticky = 'e')
+        checkout_date = tkcalendar.DateEntry(reservations_input_frame, selectmode = 'day', background = creme, foreground = orange, font = (adorage, 12), mindate = date.today())
+        min_checkout_date.trace('w', self.update_min_checkout_date)
+        checkout_date.grid(row = 3, column = 1, columnspan = 2, sticky = 'nsew', padx = 10, pady = 5, ipadx = 10)
+        tk.Label(reservations_input_frame, background = orange, font = (adorage, 14), fg = creme, text = "People:").grid(row = 4, column = 0, sticky = 'e')
+        current_people = tk.StringVar()
+        people = ttk.Spinbox(reservations_input_frame, background = creme, font = (adorage, 14), foreground = blue, from_ = 1, to = 8, state = 'readonly', textvariable = current_people, command = self.set_rooms)
+        people.grid(row = 4, column = 1, columnspan = 2, sticky = 'nsew', padx = 10, pady = 5, ipadx = 10)
+        tk.Label(reservations_input_frame, background = orange, font = (adorage, 14), fg = creme, text = "Number of Rooms:").grid(row = 5, column = 0, sticky = 'e')
+        current_rooms = tk.StringVar()
+        number_of_rooms = ttk.Spinbox(reservations_input_frame, background = creme, font = (adorage, 14), foreground = blue, from_ = 1, to = 8, state = 'readonly', textvariable = current_rooms)
+        number_of_rooms.grid(row = 5, column = 1, columnspan = 2, sticky = 'nsew', padx = 10, pady = 5, ipadx = 10)
+        tk.Label(reservations_input_frame, background = orange, font = (adorage, 14), fg = creme, text = "Choose Rooms:").grid(row = 6, column = 0, sticky = 'e')
+        choose_rooms = tk.Listbox(reservations_input_frame, foreground = blue, font = (adorage, 14))
+        choose_rooms.grid(row = 6, rowspan = 5, column = 1, sticky = 'nsew', padx = 10,pady = 5, ipadx = 10)
+        tk.Button(reservations_input_frame, background = blue, font = (adorage, 14), foreground = creme, text = "Choose", command = self.choose_room).grid(row = 6, column = 2, sticky = 'nsew', padx = 10, pady = 2)
+        tk.Button(reservations_input_frame, background = blue, font = (adorage, 14), foreground = creme, text = "Remove", command = self.remove_room).grid(row = 7, column = 2, sticky = 'nsew', padx = 10, pady = 2)
+        tk.Button(reservations_input_frame, background = blue, font = (adorage, 24), foreground = creme, text = "Show All", command = self.refresh_tables).grid(row = 18, rowspan = 2, column = 2, sticky = 'nsew', padx = 10, pady = 10)
+        tk.Button(reservations_input_frame, background = blue, font = (adorage, 24), foreground = creme, text = "Add", command = self.create_reservation).grid(row = 18, rowspan = 2, column = 1, sticky = 'nsew', padx = 10, pady = 10)
+        tk.Button(reservations_input_frame, background = blue, font = (adorage, 24), foreground = creme, text = "Delete", command = self.delete_reservation).grid(row = 18, rowspan = 2, column = 0, sticky = 'nsew', padx = 10, pady = 10) 
+        reservations_display_frame = tk.Frame(self, background = blue)
+        reservations_display_frame.grid(row = 0, rowspan = 18, column = 1, columnspan = 2, sticky = 'nsew')
+        reservations_display_frame.rowconfigure((0), weight = 1)
+        reservations_display_frame.rowconfigure((1, 2, 3), weight = 10)
+        reservations_display_frame.columnconfigure((0), weight = 1)
+        reservations_search_frame = tk.Frame(reservations_display_frame, background = creme)
+        reservations_search_frame.grid(row = 0, column = 0, sticky = 'nsew')
+        reservations_search_frame.rowconfigure((0), weight = 1)
+        reservations_search_frame.columnconfigure((0), weight = 5)
+        reservations_search_frame.columnconfigure((1), weight = 1)
+        default_text = tk.StringVar()
+        default_text.set("Search query")
+        reservations_search_entry = tk.Entry(reservations_search_frame, font = (adorage, 14), foreground = orange, textvariable = default_text)
+        reservations_search_entry.grid(row = 0, column = 0, sticky = 'ew', padx = 10)
+        reservations_search_button = tk.Button(reservations_search_frame, font = (adorage, 14), text = "Search", background = blue, foreground = creme, command = self.search_reservations)
+        reservations_search_button.grid(row = 0, column = 1, sticky = 'ew', padx = 5)
+        reservations_table_frame = tk.Frame(reservations_display_frame, background = creme)
+        reservations_table_frame.grid(row = 1, column = 0, sticky = 'nsew')
+        reservations_table = ttk.Treeview(reservations_table_frame, selectmode = 'browse', columns = [0,1,2,3,4,5], show = 'headings')
+        reservations_table.pack(expand = 1, fill = 'both')
+        reservations_table_scrollbarh = tk.Scrollbar(reservations_table_frame, orient = 'horizontal', command = reservations_table.xview)
+        reservations_table_scrollbarh.pack(fill = 'x')
+        reservations_table.config(xscrollcommand = reservations_table_scrollbarh.set)
+        reservations_table.heading(column = 0, anchor = 'w', text = "ReservationID")
+        reservations_table.heading(column = 1, anchor = 'w', text = "ReservationDate")
+        reservations_table.heading(column = 2, anchor = 'w', text = "CheckIn")
+        reservations_table.heading(column = 3, anchor = 'w', text = "CheckOut")
+        reservations_table.heading(column = 4, anchor = 'w', text = "People")
+        reservations_table.heading(column = 5, anchor = 'w', text = "Rooms")
+        self.get_reservations(table = reservations_table)
+        reservationsrooms_table_frame = tk.Frame(reservations_display_frame, background = creme)
+        reservationsrooms_table_frame.grid(row = 2, column = 0, sticky = 'nsew')
+        reservationsrooms_table = ttk.Treeview(reservationsrooms_table_frame, selectmode = 'browse', columns = [0,1,2,3,4,5,6], show = 'headings')
+        reservationsrooms_table.pack(expand = 1, fill = 'both')
+        reservationsrooms_table_scrollbarh = tk.Scrollbar(reservationsrooms_table_frame, orient = 'horizontal', command = reservationsrooms_table.xview)
+        reservationsrooms_table_scrollbarh.pack(fill = 'x')
+        reservationsrooms_table.config(xscrollcommand = reservationsrooms_table_scrollbarh.set)
+        reservationsrooms_table.heading(column = 0, anchor = 'w', text = "RoomNumber")
+        reservationsrooms_table.heading(column = 1, anchor = 'w', text = "Occupancy")
+        reservationsrooms_table.heading(column = 2, anchor = 'w', text = "Bed")
+        reservationsrooms_table.heading(column = 3, anchor = 'w', text = "Layout")
+        reservationsrooms_table.heading(column = 4, anchor = 'w', text = "Amenity")
+        reservationsrooms_table.heading(column = 5, anchor = 'w', text = "RoomRate")
+        reservationsrooms_table.heading(column = 6, anchor = 'w', text = "HousekeepingCharge")
+        Room_Tab.get_rooms(self, table = reservationsrooms_table)
+        reservations_rooms_table_frame = tk.Frame(reservations_display_frame, background = creme)
+        reservations_rooms_table_frame.grid(row = 3, column = 0, sticky = 'nsew')
+        reservations_rooms_table = ttk.Treeview(reservations_rooms_table_frame, selectmode = 'browse', columns = [0,1], show = 'headings')
+        reservations_rooms_table.pack(expand = 1, fill = 'both')
+        reservations_rooms_table_scrollbarh = tk.Scrollbar(reservations_rooms_table_frame, orient = 'horizontal', command = reservations_rooms_table.xview)
+        reservations_rooms_table_scrollbarh.pack(fill = 'x')
+        reservations_rooms_table.config(xscrollcommand = reservations_rooms_table_scrollbarh.set)
+        reservations_rooms_table.heading(column = 0, anchor = 'w', text = "ReservationID")
+        reservations_rooms_table.heading(column = 1, anchor = 'w', text = "RoomNumber")
+        self.get_reservations_rooms()
+
+    def create_reservation(self):
+        ist = pytz.timezone('Asia/Kolkata')
+        last_reservation_id = reservationcontroller.show_next_ai()
+        reservationdate = datetime.now(ist).strftime("%Y%m%d")
+        checkin_date_input = checkin_date.get_date().strftime("%Y%m%d")
+        checkout_date_input = checkout_date.get_date().strftime("%Y%m%d")
+        people_input = int(people.get())
+        rooms_input = int(number_of_rooms.get())
+        reservation = Reservation(ReservationDate = reservationdate, CheckIn = checkin_date_input, CheckOut = checkout_date_input, People = people_input, Rooms = rooms_input)
+        reservationcontroller.add(reservation)
+        reservations_table.selection_set(reservations_table.get_children()[-1])
+        for roomnumber in choose_rooms.get(0, choose_rooms.index('end')):
+            reservation_room = Reservation_Room(ReservationID = last_reservation_id, RoomNumber = roomnumber)
+            reservation_roomcontroller.add(reservation_room)
+        self.refresh_tables()
+        
+    def get_reservations(self, table):
+        all_reservations_data = reservationcontroller.show_reservations()
+        for reservation_data in all_reservations_data:
+            table.insert(parent = '', index = 0, values = reservation_data)
+
+    def refresh_tables(self):
+        for reservation in reservations_table.get_children():
+            reservations_table.delete(reservation)
+        self.get_reservations(reservations_table)
+        for room in reservationsrooms_table.get_children():
+            reservationsrooms_table.delete(room)
+        Room_Tab.get_rooms(self, table = reservationsrooms_table)
+        for reservation_room in reservations_rooms_table.get_children():
+            reservations_rooms_table.delete(reservation_room)
+        self.get_reservations_rooms()
+        
+    def refresh_reservations(self, table):
+        for reservation in table.get_children():
+            table.delete(reservation)
+        self.get_reservations(table)
+        
+    def get_reservationid(self):
+        for record in reservations_table.selection():
+            selected_reservationid = reservations_table.item(record)['values'][0]
+        return selected_reservationid
+
+    def delete_reservation(self):
+        reservationid = self.get_reservationid()
+        reservationcontroller.delete_reservation(reservationid)
+        self.refresh_tables()
+
+    def search_reservations(self):
+        search_criteria = reservations_search_entry.get()
+        search_results_raw = reservationcontroller.search_reservations(search_criteria)
+        search_results = []
+        for search_result in search_results_raw:
+            search_results.append(search_result)
+        for reservation in reservations_table.get_children():
+            reservations_table.delete(reservation)
+        for result in search_results:
+            reservations_table.insert(parent = '', index = 0, values = result)
+        
+    def set_rooms(self):
+        selected = current_people.get()
+        current_rooms.set(selected)
+        number_of_rooms.configure(to = selected)
+    
+    def choose_room(self):
+        if choose_rooms.index('end') != int(number_of_rooms.get()):
+            roomnumber = Room_Tab.get_roomnumber(self, reservationsrooms_table)
+            if roomnumber in choose_rooms.get(0, choose_rooms.index('end')):
+                print("Room is already chosen.")
+            else:
+                choose_rooms.insert('end', roomnumber)
+        else:
+            print("Maximum number of rooms chosen.")
+    
+    def remove_room(self):
+        choose_rooms.delete(choose_rooms.curselection()[0])
+    
+    def get_reservations_rooms(self):
+        all_reservations_rooms_data = reservation_roomcontroller.show_reservations_rooms()
+        for reservation_room_data in all_reservations_rooms_data: 
+            reservations_rooms_table.insert(parent = '', index = 0, values = reservation_room_data)
+    
+    def update_min_checkout_date(*args):
+        min_date_raw=min_checkout_date.get()
+        if(len(min_date_raw)>3):
+            min_date = datetime.strptime(min_date_raw,'%m/%d/%y')
+            checkout_date.config(mindate = min_date)

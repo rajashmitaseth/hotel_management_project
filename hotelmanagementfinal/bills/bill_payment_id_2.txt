@@ -1,0 +1,24 @@
+
+SYLAS HOTEL
+Adress
+Contact No.: +911234567890
+E-mail: contact.sylashotel@gmail.com
+----------------------------------------
+RECEIPT
+Sun 10/26/25 01:13:53
+PaymnetID: 2
+ReservationID: 5
+----------------------------------------
+Qty   Item                    Price (Rs.)
+1   Free Wifi                       0
+14   Complimentary Breakfast         0
+1   Gym                           100
+2   Dinner (Non-Veg, Serves 1)   1200
+----------------------------------------
+Total:                              1300
+Mode of Payment:                     UPI
+----------------------------------------
+Thank you for choosing us.
+Comfort with a touch of luxury.
+ 
+
