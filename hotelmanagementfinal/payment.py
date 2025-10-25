@@ -97,7 +97,7 @@ class Payment_Tab(tk.Frame):
         bill_date_time = datetime.now(ist).strftime("%a %x %X")
         payments_bill.insert(0,  "")
         payments_bill.insert(1,  "SYLAS HOTEL")
-        payments_bill.insert(2,  "Adress")
+        payments_bill.insert(2,  "Address")
         payments_bill.insert(3,  "Contact No.: +911234567890")
         payments_bill.insert(4,  "E-mail: contact.sylashotel@gmail.com")
         payments_bill.insert(5,  "----------------------------------------")
@@ -175,7 +175,7 @@ class Payment_Tab(tk.Frame):
         payments_bill.insert(7, datetime.now(ist).strftime("%a %x %X"))
         paymentid = paymentcontroller.show_next_ai()
         payments_bill.delete(8)
-        payments_bill.insert(8, "PaymnetID: " + str(paymentid))
+        payments_bill.insert(8, "PaymentID: " + str(paymentid))
         payments_bill.delete(9)
         payments_bill.insert(9, "ReservationID: " + str(reservationid))
         days = reservationcontroller.get_days(reservationid)
@@ -185,7 +185,7 @@ class Payment_Tab(tk.Frame):
             current_quantity.set(reservationcontroller.get_days(reservationid))
         room_details_for_all = reservation_roomcontroller.get_room_details(reservationid)
         for i in range(len(room_details_for_all)):
-            room_item = f"{room_details_for_all[i][3]}-" + f"{room_details_for_all[i][2]}-" + f"{room_details_for_all[i][4]}-" + f"{room_details_for_all[i][1]}"
+            room_item = f"{room_details_for_all[i][3][0]}-" + f"{room_details_for_all[i][2][0]}-" + f"{room_details_for_all[i][4][0]}-" + f"{room_details_for_all[i][1]}"
             total_room_price = room_details_for_all[i][5] * days
             spaces = 33 - len(room_item) - len(str(total_room_price))
             space = spaces*" "
@@ -280,7 +280,7 @@ class Payment_Tab(tk.Frame):
         lines = str()
         for line in payments_bill.get(0,'end'):
             lines += line + '\n'
-        with open(rf"bills\bill_payment_id_{paymentcontroller.show_next_ai()-1}.txt", 'w') as f:
+        with open(rf"hotelmanagementfinal\bills\bill_payment_id_{paymentcontroller.show_next_ai()-1}.txt", 'w') as f:
             f.write(''.join(lines))
             f.write('\n')
-        subprocess.Popen(["notepad.exe", rf"bills\bill_payment_id_{paymentcontroller.show_next_ai()-1}.txt"])
+        subprocess.Popen(["notepad.exe", rf"hotelmanagementfinal\bills\bill_payment_id_{paymentcontroller.show_next_ai()-1}.txt"])

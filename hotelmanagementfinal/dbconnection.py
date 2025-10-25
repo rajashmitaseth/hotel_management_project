@@ -4,7 +4,7 @@ class DBConnection:
     def __init__(self):
         # self.cnx = mysql.connector.connect(user = "root", password = "rseth2.MYSQL", host = "localhost", database = "hoteldb")
         try:
-            self.cnx = mysql.connector.connect(user = "root", password = "rseth2.MYSQL", host = "localhost", database = "hoteldb")
+            self.cnx = mysql.connector.connect(user = "root", password = "1234", host = "localhost", database = "hoteldb")
         except mysql.connector.Error as err:
             print(err)
 
@@ -20,3 +20,4 @@ class DBConnection:
     def save(self):
         self.cnx.commit()
     
+dbcnx = DBConnection()

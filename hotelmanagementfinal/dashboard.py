@@ -26,7 +26,7 @@ class Dashboard_Tab(tk.Frame):
         body_fame.pack(expand = 1, fill = 'both')
         body_fame.columnconfigure((0,1,2), weight = 1, uniform = 'a')
         body_fame.rowconfigure((0), weight = 1, uniform = 'a')
-        img = Image.open("hotel.jpg")
+        img = Image.open("hotelmanagementfinal/hotel.jpg")
         img = img.resize((1600, 875))
         img = ImageTk.PhotoImage(img)
         img_frame = ScrollableImage(body_fame, image = img, width = 1600, height = 875)

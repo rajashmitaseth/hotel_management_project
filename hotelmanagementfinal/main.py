@@ -18,7 +18,7 @@ class App(tk.Tk):
         super().__init__()
         global notebook
         self.title("Sylas Hotel")
-        self.iconbitmap("logo.ico")
+        self.iconbitmap(default="hotelmanagementfinal/logo.ico")
         screen_height = self.winfo_screenheight()
         screen_width = self.winfo_screenwidth()
         window_width = 1600

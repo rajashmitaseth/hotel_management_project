@@ -1,4 +1,4 @@
-from hotelmanagementfinal.dbconnection import dbcnx
+from dbconnection import dbcnx
 from models.roommodel import Room
 
 def addroom(room:Room):

@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from hotelmanagementfinal.dbconnection import dbcnx
+from dbconnection import dbcnx
 from models.roommodel import Room
 import controllers.roomcontroller as roomcontroller
 

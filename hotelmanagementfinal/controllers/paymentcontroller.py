@@ -1,4 +1,4 @@
-from hotelmanagementfinal.dbconnection import dbcnx
+from dbconnection import dbcnx
 from models.paymentmodel import Payment
 
 def add_payment(payment:Payment):

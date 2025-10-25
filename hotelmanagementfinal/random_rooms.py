@@ -1,7 +1,7 @@
 import random
 from models.roommodel import Room
 import controllers.roomcontroller as roomcontroller
-from hotelmanagementfinal.dbconnection import dbcnx
+from dbconnection import dbcnx
 
 def create_random_rooms():
     cursor = dbcnx.getcursor()

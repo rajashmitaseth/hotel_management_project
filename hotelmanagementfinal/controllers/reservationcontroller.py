@@ -1,4 +1,4 @@
-from hotelmanagementfinal.dbconnection import dbcnx
+from dbconnection import dbcnx
 from models.reservationsmodel import Reservation
 
 def add(reservation:Reservation):
